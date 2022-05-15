@@ -1,1 +1,7 @@
+.vs
+
+# Compilation output directory
 x64
+
+# INTECH language test file
+code.intech
