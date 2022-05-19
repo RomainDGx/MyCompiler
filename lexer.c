@@ -78,45 +78,45 @@ char* lexer_getalphanum_rollback(buffer_t* buffer)
 
 long lexer_getnumber(buffer_t* buffer)
 {
-	char* number = malloc(LEXEM_SIZE + 1);
-	assert(number != NULL);
+	char* string = malloc(LEXEM_SIZE + 1);
+	assert(string != NULL);
 
-	char* index = number;
+	char* index = string;
 
 	buf_lock(buffer);
 
 	char c = buf_getchar_after_blank(buffer);
 
-	if (buf_eof_strict(buffer))
+	if (!buf_eof_strict(buffer))
 	{
-		goto notnumber;
+		if (c == '-')
+		{
+			*index = c;
+			index++;
+			c = buf_getchar(buffer);
+		}
+
+
+		while (!buf_eof_strict(buffer) && isdigit(c))
+		{
+			// TODO: Throws when lexel size is too long
+			assert(index < string + LEXEM_SIZE);
+
+			*index = c;
+			index++;
+
+			c = buf_getchar(buffer);
+		}
 	}
 
-	if (c == '-')
-	{
-		*index = c;
-		index++;
-		c = buf_getchar(buffer);
-	}
-
-
-	while (!buf_eof_strict(buffer) && isdigit(c))
-	{
-		// TODO: Throws when lexel size is too long
-		assert(index < number + LEXEM_SIZE);
-
-		*index = c;
-		index++;
-
-		c = buf_getchar(buffer);
-	}
-
-	notnumber:
-
-	assert(index < number + LEXEM_SIZE + 1);
+	assert(index < string + LEXEM_SIZE + 1);
 	*index = '\0';
 
 	buf_rollback_and_unlock(buffer, 1);
 
-	return strtol(number, NULL, 10);
+	long number = strtol(string, NULL, 10);
+
+	free(string);
+
+	return number;
 }
