@@ -71,7 +71,7 @@ char* lexer_getalphanum_rollback(buffer_t* buffer)
 	assert(index < string + LEXEM_SIZE + 1);
 	*index = '\0';
 
-	buf_rollback_and_unlock(buffer, index - string);
+	buf_rollback_and_unlock(buffer, index - string + 1);
 
 	return string;
 }
@@ -94,6 +94,9 @@ long lexer_getnumber(buffer_t* buffer)
 			*index = c;
 			index++;
 			c = buf_getchar(buffer);
+		}
+		else if (!isdigit(c)) {
+			// TODO: Throws an error when unexpected character
 		}
 
 
