@@ -5,6 +5,8 @@
 // #define DEBUG false
 
 #include "buffer.h"
+#include "ast.h"
+#include "type.h"
 
 #define COLOR_BLUE "\e[34m"
 #define COLOR_GREEN "\e[32m"
@@ -16,8 +18,9 @@
 
 #define STREQUAL 0
 
-char *copy_name (char *name);
-void print_backtrace ();
+char *copy_name(char* name);
+void print_backtrace();
 void parse_error(char* message, buffer_t* buffer, int exit_code);
+type_e parse_type(char* name, buffer_t* buffer);
 
 #endif /* ifndef UTILS_H */
