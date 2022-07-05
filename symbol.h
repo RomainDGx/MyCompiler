@@ -15,5 +15,6 @@ void sym_delete(symbol_t* sym);
 void sym_remove(symbol_t** table, symbol_t* sym);
 void sym_add(symbol_t** table, symbol_t* sym);
 symbol_t* sym_search(symbol_t* table, char* name);
+void sym_clear(symbol_t* table);
 
 #endif /* SYMBOL_H */

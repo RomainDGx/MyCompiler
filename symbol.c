@@ -81,3 +81,13 @@ symbol_t* sym_search(symbol_t* table, char* name)
 	}
 	return NULL;
 }
+
+void sym_clear(symbol_t* table)
+{
+	while (table != NULL)
+	{
+		symbol_t* next = table->next;
+		free(table);
+		table = next;
+	}
+}
