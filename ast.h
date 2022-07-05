@@ -30,9 +30,12 @@ typedef enum {
 } ast_binary_e;
 
 typedef enum {
-	AST_INCREMENT,
-	AST_DECREMENT,
-	AST_NEGATE
+	AST_LEFT_INCREMENT,
+	AST_RIGHT_INCREMENT,
+	AST_LEFT_DECREMENT,
+	AST_RIGHT_DECREMENT,
+	AST_NEGATE,
+	AST_PARENTHESIS
 } ast_unary_e;
 
 typedef struct ast_list_t {
@@ -107,6 +110,8 @@ ast_t* ast_new_declaration(ast_t* lvalue, ast_t* rvalue);
 ast_t* ast_new_assignment(ast_t* lvalue, ast_t* rvalue);
 ast_t* ast_new_comp_stmt(ast_list_t* stmts);
 ast_t* ast_new_return(ast_t* expr);
+ast_t* ast_new_void();
+
 ast_list_t* ast_list_new_node(ast_t* elem);
 ast_list_t* ast_list_add(ast_list_t* list, ast_t* elem);
 

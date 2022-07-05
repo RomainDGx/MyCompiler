@@ -118,6 +118,11 @@ ast_t* ast_new_return(ast_t* expr)
 	return ast;
 }
 
+ast_t* ast_new_void()
+{
+	return ast_init(AST_VOID);
+}
+
 ast_list_t* ast_list_new_node(ast_t* elem)
 {
 	ast_list_t* node = (ast_list_t*)malloc(sizeof(ast_list_t));
