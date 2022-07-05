@@ -139,25 +139,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="assignment_parser.h" />
     <ClInclude Include="ast.h" />
+    <ClInclude Include="branch_parser.h" />
     <ClInclude Include="buffer.h" />
+    <ClInclude Include="compound_statement_parser.h" />
+    <ClInclude Include="declaration_parser.h" />
+    <ClInclude Include="expression_parser.h" />
+    <ClInclude Include="function_call_parser.h" />
+    <ClInclude Include="function_parser.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="loop_parser.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="return_parser.h" />
+    <ClInclude Include="stack.h" />
     <ClInclude Include="symbol.h" />
     <ClInclude Include="type.h" />
+    <ClInclude Include="unary_statement_parser.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="variable_parser.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code.intech" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ast.c" />
+    <ClCompile Include="branch_parser.c" />
     <ClCompile Include="buffer.c" />
+    <ClCompile Include="compound_statement_parser.c" />
+    <ClCompile Include="declaration_parser.c" />
+    <ClCompile Include="expression_parser.c" />
+    <ClCompile Include="function_call_parser.c" />
+    <ClCompile Include="function_parser.c" />
     <ClCompile Include="lexer.c" />
+    <ClCompile Include="loop_parser.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="parser.c" />
+    <ClCompile Include="return_parser.c" />
+    <ClCompile Include="stack.c" />
     <ClCompile Include="symbol.c" />
+    <ClCompile Include="unary_statement_parser.c" />
     <ClCompile Include="utils.c" />
+    <ClCompile Include="assignment_parser.c" />
+    <ClCompile Include="variable_parser.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
