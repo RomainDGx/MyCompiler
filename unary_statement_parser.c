@@ -1,5 +1,6 @@
-#include <stdlib.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "buffer.h"
 #include "expression_parser.h"
@@ -18,19 +19,34 @@ static ast_t* parse_negate(buffer_t* buffer, symbol_t** local_table)
 		return ast_new_unary(AST_NEGATE, parse_negate(buffer, local_table));
 	}
 
-	char* variable_name = lexer_getalphanum(buffer);
-	symbol_t* symbol = sym_search(*local_table, variable_name);
-	free(variable_name);
-	if (symbol == NULL)
-	{
-		parse_error("Cannot find variable name.", buffer, 1);
-	}
-	if (symbol->type != TYPE_BOOLEAN)
-	{
-		parse_error("Invalid variable type, expected boolean.", buffer, 1);
-	}
+	char* lexem = lexer_getalphanum(buffer);
+	symbol_t* symbol = sym_search(*local_table, lexem);
 
-	return ast_new_unary(AST_NEGATE, symbol->attributes);
+	ast_t* ast = NULL;
+
+	if (strcmp(lexem, "vrai") == 0)
+	{
+		ast = ast_new_boolean(true);
+	}
+	else if (strcmp(lexem, "faux") == 0)
+	{
+		ast = ast_new_boolean(false);
+	}
+	else if (symbol != NULL)
+	{
+		if (symbol->type != TYPE_BOOLEAN)
+		{
+			parse_error("Invalid variable type, expected boolean.", buffer, 1);
+		}
+		ast = symbol->attributes;
+	}
+	else
+	{
+		parse_error("Invalid token.", buffer, 1);
+	}
+	free(lexem);
+
+	return ast_new_unary(AST_NEGATE, ast);
 }
 
 static ast_t* parse_left_increment(buffer_t* buffer, symbol_t** local_table)
@@ -160,7 +176,7 @@ ast_t* unary_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** local_
 	}
 	if (!isalpha(c))
 	{
-		parse_error("Invalid token", buffer, 1);
+		parse_error("Invalid token.", buffer, 1);
 	}
 
 	char* variable_name = lexer_getalphanum(buffer);
