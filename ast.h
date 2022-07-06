@@ -23,10 +23,18 @@ typedef enum {
 } ast_node_type_e;
 
 typedef enum {
+	AST_MULTIPLICATION,
+	AST_DIVISION,
 	AST_ADDITION,
 	AST_SUBSTRACTION,
-	AST_MULTIPLICATION,
-	AST_DIVISION
+	AST_LESS,
+	AST_LESS_EQUAL,
+	AST_EQUAL,
+	AST_NOT_EQUAL,
+	AST_GRATER_EQUAL,
+	AST_GREATER,
+	AST_AND,
+	AST_OR
 } ast_binary_e;
 
 typedef enum {
