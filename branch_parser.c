@@ -25,14 +25,14 @@ ast_t* branch_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** local
 	}
 
 	ast_t* condition = expression_parser(buffer, global_table, local_table);
-	//assert(condition != NULL);
+	assert(condition != NULL);
 
 	if (buf_getchar_after_blank(buffer) != ')')
 	{
 		parse_error("Invalid token, expected ')'.", buffer, 1);
 	}
 
-	ast_t* statements = compound_statement_parser(buffer, global_table, local_table);
+	ast_t* statements = statement_parser(buffer, global_table, local_table);
 	assert(statements != NULL);
 
 	ast_t* else_statement = NULL;
@@ -42,22 +42,8 @@ ast_t* branch_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** local
 	if (strcmp(keyword, "sinon") == 0)
 	{
 		buf_forward(buffer, 5);
-		char c = buf_getchar_rollback(buffer);
 
-		if (c == '{')
-		{
-			else_statement = compound_statement_parser(buffer, global_table, local_table);
-			assert(statements != NULL);
-		}
-		else if (strcmp(lexer_getalphanum_rollback(buffer), "si") == 0)
-		{
-			else_statement = branch_parser(buffer, global_table, local_table);
-			assert(statements != NULL);
-		}
-		else
-		{
-			parse_error("Invalid token.", buffer, 1);
-		}
+		else_statement = statement_parser(buffer, global_table, local_table);
 	}
 	free(keyword);
 

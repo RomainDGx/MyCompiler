@@ -31,7 +31,8 @@ ast_t* loop_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** local_t
 		parse_error("Invalid token, expected ')'.", buffer, 1);
 	}
 
-	ast_t* statements = compound_statement_parser(buffer, global_table, local_table);
+	ast_t* statements = statement_parser(buffer, global_table, local_table);
 
 	return ast_new_loop(condition, statements);
 }
+
