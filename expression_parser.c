@@ -109,7 +109,7 @@ static ast_t* expression_value_parser(buffer_t* buffer, symbol_t** global_table,
 		if (buf_getchar(buffer) == '=')
 		{
 			buf_unlock(buffer);
-			return ast_new_binary(AST_GRATER_EQUAL, NULL, NULL);
+			return ast_new_binary(AST_GREATER_EQUAL, NULL, NULL);
 		}
 		else
 		{
@@ -185,7 +185,7 @@ static int get_symbol_priority(ast_t* symbol)
 				case AST_LESS_EQUAL:
 				case AST_EQUAL:
 				case AST_NOT_EQUAL:
-				case AST_GRATER_EQUAL:
+				case AST_GREATER_EQUAL:
 				case AST_GREATER:
 					return 3;
 
@@ -210,7 +210,7 @@ static bool left_is_prior(ast_t* left, ast_t* right)
 	// 0: AST_INTEGER AST_BOOLEAN AST_VARIABLE AST_FNCALL AST_UNARY
 	// 1: AST_MULTIPLICATION AST_DIVISION
 	// 2: AST_ADDITION AST_SUBSTRACTION
-	// 3: AST_LESS AST_LESS_EQUAL AST_EQUAL AST_NOT_EQUAL AST_GRATER_EQUAL AST_GREATER
+	// 3: AST_LESS AST_LESS_EQUAL AST_EQUAL AST_NOT_EQUAL AST_GREATER_EQUAL AST_GREATER
 	// 4: AST_AND AST_OR
 	// 5: NULL
 

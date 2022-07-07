@@ -37,7 +37,7 @@ ast_t* declaration_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** 
 
 	if (c == ';')
 	{
-		return ast_new_declaration(variable, ast_new_void());
+		return ast_new_declaration(variable, NULL);
 	}
 	else if (c == '=')
 	{

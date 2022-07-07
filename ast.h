@@ -6,7 +6,6 @@
 #include "type.h"
 
 typedef enum {
-	AST_VOID,
 	AST_INTEGER,
 	AST_BOOLEAN,
 	AST_UNARY,
@@ -31,7 +30,7 @@ typedef enum {
 	AST_LESS_EQUAL,
 	AST_EQUAL,
 	AST_NOT_EQUAL,
-	AST_GRATER_EQUAL,
+	AST_GREATER_EQUAL,
 	AST_GREATER,
 	AST_AND,
 	AST_OR
@@ -118,7 +117,6 @@ ast_t* ast_new_declaration(ast_t* lvalue, ast_t* rvalue);
 ast_t* ast_new_assignment(ast_t* lvalue, ast_t* rvalue);
 ast_t* ast_new_comp_stmt(ast_list_t* stmts);
 ast_t* ast_new_return(ast_t* expr);
-ast_t* ast_new_void();
 
 ast_list_t* ast_list_new_node(ast_t* elem);
 ast_list_t* ast_list_add(ast_list_t* list, ast_t* elem);
