@@ -22,6 +22,7 @@ static char* create_tabs(int tabs)
 
 static void expression(FILE* file, ast_t* ast);
 static void compound_statement(FILE* file, ast_t* ast, int tabs);
+static void dispatcher(FILE* file, ast_t* ast, int tabs);
 
 static void integer(FILE* file, ast_t* ast)
 {
@@ -150,7 +151,7 @@ static void ret(FILE* file, ast_t* ast)
 {
 	fprintf(file, "return ");
 	expression(file, ast->ret.expression);
-	fprintf(file, ";");
+	fprintf(file, ";\n");
 }
 
 static void assignment(FILE* file, ast_t* ast)
@@ -158,7 +159,7 @@ static void assignment(FILE* file, ast_t* ast)
 	variable(file, ast->assigment.lvalue);
 	fprintf(file, " = ");
 	expression(file, ast->assigment.rvalue);
-	fprintf(file, ";");
+	fprintf(file, ";\n");
 }
 
 static void declaration(FILE* file, ast_t* ast)
@@ -171,7 +172,7 @@ static void declaration(FILE* file, ast_t* ast)
 		expression(file, ast->declaration.rvalue);
 	}
 
-	fprintf(file, ";");
+	fprintf(file, ";\n");
 }
 
 static void expression(FILE* file, ast_t* ast)
@@ -213,7 +214,12 @@ static void loop(FILE* file, ast_t* ast, int tabs)
 	fprintf(file, "while (");
 	expression(file, ast->loop.condition);
 	fprintf(file, ")\n");
-	compound_statement(file, ast->loop.statement, tabs);
+
+	if (ast->loop.statement->type != AST_COMPOUND_STATEMENT)
+	{
+		tabs += 1;
+	}
+	dispatcher(file, ast->loop.statement, tabs);
 }
 
 static void branch(FILE* file, ast_t* ast, int tabs)
@@ -221,7 +227,7 @@ static void branch(FILE* file, ast_t* ast, int tabs)
 	fprintf(file, "if (");
 	expression(file, ast->branch.condition);
 	fprintf(file, ")\n");
-	compound_statement(file, ast->branch.valid, tabs);
+	dispatcher(file, ast->branch.valid, ast->branch.valid->type == AST_COMPOUND_STATEMENT ? tabs : tabs + 1);
 
 	if (ast->branch.invalid != NULL)
 	{
@@ -234,11 +240,58 @@ static void branch(FILE* file, ast_t* ast, int tabs)
 			fprintf(file, " ");
 			branch(file, ast->branch.invalid, tabs);
 		}
-		else if (ast->branch.invalid->type == AST_COMPOUND_STATEMENT)
+		else
 		{
 			fprintf(file, "\n");
-			compound_statement(file, ast->branch.invalid, tabs);
+			dispatcher(file, ast->branch.invalid, ast->branch.invalid->type == AST_COMPOUND_STATEMENT ? tabs : tabs + 1);
 		}
+	}
+}
+
+static void dispatcher(FILE* file, ast_t* ast, int tabs)
+{
+	char* s = create_tabs(tabs);
+	fprintf(file, s);
+	free(s);
+	switch (ast->type)
+	{
+		case AST_FNCALL:
+			fn_call(file, ast);
+			fprintf(file, ";\n");
+			break;
+
+		case AST_UNARY:
+			unary(file, ast);
+			fprintf(file, ";\n");
+			break;
+
+		case AST_ASSIGNMENT:
+			assignment(file, ast);
+			break;
+
+		case AST_DECLARATION:
+			declaration(file, ast);
+			break;
+
+		case AST_RETURN:
+			ret(file, ast);
+			break;
+
+		case AST_LOOP:
+			loop(file, ast, tabs);
+			break;
+
+		case AST_CONDITION:
+			branch(file, ast, tabs);
+			break;
+
+		case AST_COMPOUND_STATEMENT:
+			compound_statement(file, ast, tabs);
+			break;
+
+		default:
+			// Throws an error
+			break;
 	}
 }
 
@@ -247,50 +300,13 @@ static void compound_statement(FILE* file, ast_t* ast, int tabs)
 	char* local_tabs = create_tabs(tabs);
 
 	char* inside_tabs = create_tabs(tabs + 1);
-		
-	fprintf(file, "%s{\n", local_tabs);
+
+	fprintf(file, "{\n");
 
 	ast_list_t* statement = ast->compound_statements.statements;
 	while (statement != NULL)
 	{
-		fprintf(file, inside_tabs);
-
-		switch (statement->value->type)
-		{
-			case AST_FNCALL:
-				fn_call(file, statement->value);
-				fprintf(file, ";");
-				break;
-
-			case AST_UNARY:
-				unary(file, statement->value);
-				fprintf(file, ";");
-				break;
-
-			case AST_ASSIGNMENT:
-				assignment(file, statement->value);
-				break;
-
-			case AST_DECLARATION:
-				declaration(file, statement->value);
-				break;
-
-			case AST_RETURN:
-				ret(file, statement->value);
-				break;
-
-			case AST_LOOP:
-				loop(file, statement->value, tabs + 1);
-				break;
-
-			case AST_CONDITION:
-				branch(file, statement->value, tabs + 1);
-				break;
-
-			default:
-				break;
-		}
-		fprintf(file, "\n");
+		dispatcher(file, statement->value, tabs + 1);
 
 		statement = statement->next;
 	}
