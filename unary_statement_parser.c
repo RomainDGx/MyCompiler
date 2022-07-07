@@ -19,36 +19,7 @@ static ast_t* parse_negate(buffer_t* buffer, symbol_t** global_table, symbol_t**
 		return ast_new_unary(AST_NEGATE, parse_negate(buffer, global_table, local_table));
 	}
 
-	return ast_new_unary(AST_NEGATE, expression_parser(buffer, local_table, global_table));
-
-	char* lexem = lexer_getalphanum(buffer);
-	symbol_t* symbol = sym_search(*local_table, lexem);
-
-	ast_t* ast = NULL;
-
-	if (strcmp(lexem, "vrai") == 0)
-	{
-		ast = ast_new_boolean(true);
-	}
-	else if (strcmp(lexem, "faux") == 0)
-	{
-		ast = ast_new_boolean(false);
-	}
-	else if (symbol != NULL)
-	{
-		if (symbol->type != TYPE_BOOLEAN)
-		{
-			parse_error("Invalid variable type, expected boolean.", buffer, 1);
-		}
-		ast = symbol->attributes;
-	}
-	else
-	{
-		parse_error("Invalid token.", buffer, 1);
-	}
-	free(lexem);
-
-	return ast_new_unary(AST_NEGATE, ast);
+	return ast_new_unary(AST_NEGATE, expression_parser(buffer, global_table, local_table));
 }
 
 static ast_t* parse_left_increment(buffer_t* buffer, symbol_t** local_table)
