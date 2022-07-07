@@ -148,6 +148,7 @@
     <ClInclude Include="expression_parser.h" />
     <ClInclude Include="function_call_parser.h" />
     <ClInclude Include="function_parser.h" />
+    <ClInclude Include="generator.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="loop_parser.h" />
     <ClInclude Include="parser.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="expression_parser.c" />
     <ClCompile Include="function_call_parser.c" />
     <ClCompile Include="function_parser.c" />
+    <ClCompile Include="generator.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="loop_parser.c" />
     <ClCompile Include="main.c" />

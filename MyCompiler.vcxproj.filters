@@ -78,6 +78,9 @@
     <ClInclude Include="parser.h">
       <Filter>Header Files\parsers</Filter>
     </ClInclude>
+    <ClInclude Include="generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code.intech">
@@ -141,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="parser.c">
       <Filter>Source Files\parsers</Filter>
+    </ClCompile>
+    <ClCompile Include="generator.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
