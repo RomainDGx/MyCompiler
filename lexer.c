@@ -19,7 +19,7 @@ char* lexer_getalphanum(buffer_t* buffer)
 	char c = buf_getchar_after_blank(buffer);
 
 	// Check if start with alphabetic character
-	if (!buf_eof_strict(buffer) && isalpha(c))
+	if (!buf_eof_strict(buffer) && (isalpha(c) || c == '_'))
 	{
 		do
 		{
@@ -31,7 +31,7 @@ char* lexer_getalphanum(buffer_t* buffer)
 
 			c = buf_getchar(buffer);
 		}
-		while (!buf_eof_strict(buffer) && isalnum(c));
+		while (!buf_eof_strict(buffer) && (isalnum(c) || c == '_'));
 	}
 
 	assert(index < string + LEXEM_SIZE + 1);
@@ -53,7 +53,7 @@ char* lexer_getalphanum_rollback(buffer_t* buffer)
 
 	char c = buf_getchar_after_blank(buffer);
 
-	if (!buf_eof_strict(buffer) && isalpha(c))
+	if (!buf_eof_strict(buffer) && (isalpha(c) || c == '_'))
 	{
 		do
 		{
@@ -65,7 +65,7 @@ char* lexer_getalphanum_rollback(buffer_t* buffer)
 
 			c = buf_getchar(buffer);
 		}
-		while (!buf_eof_strict(buffer) && isalnum(c));
+		while (!buf_eof_strict(buffer) && (isalnum(c) || c == '_'));
 	}
 
 	assert(index < string + LEXEM_SIZE + 1);
