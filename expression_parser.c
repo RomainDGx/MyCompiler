@@ -62,7 +62,36 @@ static ast_t* expression_value_parser(buffer_t* buffer, symbol_t** global_table,
 	}
 	else if (c == '!')
 	{
+		buf_lock(buffer);
+
+		char* token = malloc(sizeof(char) * 3);
+		assert(token != NULL);
+		buf_getnchar(buffer, token, 2);
+		token[2] = '\0';
+
+		if (strcmp(token, "!=") == 0)
+		{
+			buf_unlock(buffer);
+			free(token);
+			return ast_new_binary(AST_NOT_EQUAL, NULL, NULL);
+		}
+		free(token);
+		buf_rollback_and_unlock(buffer, 2);
 		return unary_parser(buffer, global_table, local_table);
+	}
+	else if (c == '=')
+	{
+		char* token = malloc(sizeof(char) * 3);
+		assert(token != NULL);
+		buf_getnchar(buffer, token, 2);
+		token[2] = '\0';
+
+		if (strcmp(token, "==") != 0)
+		{
+			parse_error("Invalid token type, expected '=='.", buffer, 1);
+		}
+		free(token);
+		return ast_new_binary(AST_EQUAL, NULL, NULL);
 	}
 	else if (c == '*')
 	{
@@ -81,8 +110,20 @@ static ast_t* expression_value_parser(buffer_t* buffer, symbol_t** global_table,
 	}
 	else if (c == '-')
 	{
-		// TODO: Check if is negative number...
-		buf_forward(buffer, 1);
+		buf_lock(buffer);
+		char* token = malloc(sizeof(char) * 2);
+		assert(token != NULL);
+		buf_getnchar(buffer, token, 2);
+
+		if (isdigit(token[1]))
+		{
+			buf_rollback_and_unlock(buffer, 2);
+			free(token);
+			return ast_new_integer(lexer_getnumber(buffer));
+		}
+
+		buf_rollback_and_unlock(buffer, 1);
+		free(token);
 		return ast_new_binary(AST_SUBSTRACTION, NULL, NULL);
 	}
 	else if (c == '<')
