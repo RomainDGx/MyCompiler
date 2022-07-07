@@ -8,7 +8,7 @@
 #include "symbol.h"
 #include "utils.h"
 
-static ast_t* parse_negate(buffer_t* buffer, symbol_t** local_table)
+static ast_t* parse_negate(buffer_t* buffer, symbol_t** global_table, symbol_t** local_table)
 {
 	if (buf_getchar(buffer) != '!')
 	{
@@ -16,8 +16,10 @@ static ast_t* parse_negate(buffer_t* buffer, symbol_t** local_table)
 	}
 	if (buf_getchar_rollback(buffer) == '!')
 	{
-		return ast_new_unary(AST_NEGATE, parse_negate(buffer, local_table));
+		return ast_new_unary(AST_NEGATE, parse_negate(buffer, global_table, local_table));
 	}
+
+	return ast_new_unary(AST_NEGATE, expression_parser(buffer, local_table, global_table));
 
 	char* lexem = lexer_getalphanum(buffer);
 	symbol_t* symbol = sym_search(*local_table, lexem);
@@ -160,7 +162,7 @@ ast_t* unary_parser(buffer_t* buffer, symbol_t** global_table, symbol_t** local_
 
 	if (c == '!')
 	{
-		return parse_negate(buffer, local_table);
+		return parse_negate(buffer, global_table, local_table);
 	}
 	if (c == '+')
 	{
