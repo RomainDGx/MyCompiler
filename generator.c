@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "ast.h"
 #include "generator.h"
@@ -22,7 +21,7 @@ static char* create_tabs(int tabs)
 }
 
 static void expression(FILE* file, ast_t* ast);
-void compound_statement(FILE* file, ast_t* ast);
+static void compound_statement(FILE* file, ast_t* ast, int tabs);
 
 static void integer(FILE* file, ast_t* ast)
 {
@@ -43,21 +42,13 @@ static void type(FILE* file, type_e type)
 {
 	switch (type)
 	{
-	case TYPE_INTEGER:
-		fprintf(file, "long");
-		break;
+		case TYPE_INTEGER: fprintf(file, "long"); break;
+		case TYPE_BOOLEAN: fprintf(file, "bool"); break;
+		case TYPE_VOID   : fprintf(file, "void"); break;
 
-	case TYPE_BOOLEAN:
-		fprintf(file, "bool");
-		break;
-
-	case TYPE_VOID:
-		fprintf(file, "void");
-		break;
-
-	default:
-		// TODO: Throws an error.
-		break;
+		default:
+			// TODO: Throws an error.
+			break;
 	}
 }
 
@@ -337,13 +328,13 @@ static void function(FILE* file, ast_t* ast)
 
 void generator(FILE* file, ast_list_t* ast)
 {
-	fprintf(file, "#include <stdbool.h>\n\n");
+	fprintf(file, "#include <stdbool.h>\n");
 
 	ast_list_t* func = ast;
 	while (func != NULL)
 	{
+		fprintf(file, "\n");
 		function(file, func->value);
-		fprintf(file, "\n\n");
 
 		func = func->next;
 	}
